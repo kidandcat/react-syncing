@@ -17,7 +17,7 @@ That's all!
 
 ## Usage
 
-```
+```javascript
 import Sync from "react-syncing";
 
 export class App extends Sync {
@@ -30,7 +30,7 @@ export class App extends Sync {
 
 From another component
 
-```
+```javascript
 import Sync from "react-syncing";
 
 export class NameInput extends Sync {
