@@ -38,6 +38,7 @@ export default class Sync extends React.Component {
     this._received_messages.push(id);
     PubSub.publish("state", { cmd: "get", id, value: this });
     try {
+      this.didMount = this.didMount.bind(this);
       this.didMount();
     } catch (e) {}
   }
@@ -45,6 +46,7 @@ export default class Sync extends React.Component {
     PubSub.unsubscribe(this.token);
     PubSub.unsubscribe(this.token2);
     try {
+      this.willUnmount = this.willUnmount.bind(this);
       this.willUnmount();
     } catch (e) {}
   }
@@ -67,9 +69,11 @@ export default class Sync extends React.Component {
 
 function makeid() {
   var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 15; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+  for (var i = 0; i < 15; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
 }

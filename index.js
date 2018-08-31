@@ -55,6 +55,7 @@ var Sync = function (_React$Component) {
 
         switch (cmd) {
           case "state":
+            console.log("state", state);
             if (!~_this2._received_messages.indexOf(id)) {
               _this2._received_messages.push(id);
               _this2.setState(value);
@@ -79,6 +80,7 @@ var Sync = function (_React$Component) {
       this._received_messages.push(id);
       _pubsubJs2.default.publish("state", { cmd: "get", id: id, value: this });
       try {
+        this.didMount = this.didMount.bind(this);
         this.didMount();
       } catch (e) {}
     }
@@ -88,6 +90,7 @@ var Sync = function (_React$Component) {
       _pubsubJs2.default.unsubscribe(this.token);
       _pubsubJs2.default.unsubscribe(this.token2);
       try {
+        this.willUnmount = this.willUnmount.bind(this);
         this.willUnmount();
       } catch (e) {}
     }
@@ -96,6 +99,7 @@ var Sync = function (_React$Component) {
     value: function set(state) {
       var _this3 = this;
 
+      console.log("set", state);
       var id = makeid();
       this._received_messages.push(id);
       this.setState(state, function () {
