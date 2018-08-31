@@ -17,7 +17,7 @@ export default class Sync extends React.Component {
     this.token = PubSub.subscribe("state", (msg, { cmd, value, id }) => {
       switch (cmd) {
         case "state":
-          if (!~this._received_messages.indexOf(id)) {
+          if (this._received_messages.indexOf(id) !== -1) {
             this._received_messages.push(id);
             this.setState(value);
           }

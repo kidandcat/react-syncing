@@ -55,7 +55,7 @@ var Sync = function (_React$Component) {
 
         switch (cmd) {
           case "state":
-            if (!~_this2._received_messages.indexOf(id)) {
+            if (_this2._received_messages.indexOf(id) !== -1) {
               _this2._received_messages.push(id);
               _this2.setState(value);
             }
