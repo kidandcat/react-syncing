@@ -22,7 +22,10 @@ import Sync from "react-syncing";
 
 export class App extends Sync {
   render(){
-    return <div>{this.state.name}</div>
+    return (<div>
+      <p>{this.state.name}</p>
+      <NameInput />
+    </div>)
   }
 }
 
