@@ -1,5 +1,5 @@
 {
-  "name": "sync",
+  "name": "react-syncing",
   "version": "1.0.0",
   "description": "Sync state in React",
   "main": "index.js",

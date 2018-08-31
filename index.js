@@ -6,8 +6,11 @@ export default class Sync extends React.Component {
   /* STATE SYNC */
   // Setup an empty state or it will be null and accessing things like
   // this.state.variable will throw exception because this.state will be null
-  state = {};
-  _received_messages = [];
+  constructor() {
+    super();
+    this.state = {};
+    this._received_messages = [];
+  }
   componentDidMount() {
     this.token = PubSub.subscribe("state", (msg, { cmd, value, id }) => {
       switch (cmd) {
