@@ -5,11 +5,13 @@ Synchronize state between react components using pubsub.
 
 ## Instructions
 
-If you extends from `Sync` instead of using `setState`, use `set`,
+If you extends from `Sync`: 
+
+instead of using `setState`, use `set`,
 
 instead of using `componentWillUnmount`, use `willUnmount`,
 
-And instead of using `componentDidMount`, use `didMount`
+and instead of using `componentDidMount`, use `didMount`
 
 That's all!
 
