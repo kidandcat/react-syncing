@@ -1,0 +1,8 @@
+{
+  "name": "sync",
+  "version": "1.0.0",
+  "description": "Sync state in React",
+  "main": "index.js",
+  "author": "kidandcat",
+  "license": "MIT"
+}
