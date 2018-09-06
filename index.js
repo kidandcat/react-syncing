@@ -57,6 +57,9 @@ var Sync = function (_React$Component) {
           case "state":
             if (_this2._received_messages.indexOf(id) === -1) {
               _this2._received_messages.push(id);
+              if (_this2.state != value) {
+                _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: value });
+              }
               _this2.setState(value);
             }
             break;
