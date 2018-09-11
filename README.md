@@ -54,6 +54,8 @@ https://kidandcat.github.io/sync-performance/
 All the squares are syncing the state with the Root element that keeps changing the color and adding new elements. Only the firs Square receives the color as a prop.
 The first square shows the number of rendered elements.
 
+In my computer, it renders 200 elements without any issue. After that, it start suffering delays, I would need to test react alone too. Anyway, obviously, you shouldn't be syncing every single component of your webpage.
+
 ## License
 
 MIT
