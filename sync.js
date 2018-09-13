@@ -1,45 +1,65 @@
 import React from "react";
 import PubSub from "pubsub-js";
 
-export default class Sync extends React.Component {
-  /* ---------- */
-  /* STATE SYNC */
-  // Setup an empty state or it will be null and accessing things like
-  // this.state.variable will throw exception because this.state will be null
+export class Master extends React.Component {
   constructor() {
     super();
     this.state = {};
-    this._received_messages = [];
     this.set = this.set.bind(this);
-    this.action = this.action.bind(this);
-    this.initialized = false;
   }
   componentDidMount() {
-    this.token = PubSub.subscribe("state", (msg, { cmd, value, id }) => {
+    this.token = PubSub.subscribe("state", (msg, { cmd, value }) => {
       switch (cmd) {
-        case "state":
-          if (this._received_messages.indexOf(id) === -1) {
-            this._received_messages.push(id);
-            PubSub.publish("state", { cmd: "state", id, value: value });
-            this.setState(value);
-          }
+        case "stateToMaster":
+          this.setState(value, () => {
+            PubSub.publish("state", {
+              cmd: "stateToSlaves",
+              value: this.state
+            });
+          });
           break;
         case "get":
-          if (this._received_messages.indexOf(id) === -1) {
-            this._received_messages.push(id);
-            id = makeid();
-            this._received_messages.push(id);
-            PubSub.publish("state", { cmd: "state", id, value: this.state });
-          }
+          PubSub.publish("state", {
+            cmd: "stateToSlaves",
+            value: this.state
+          });
           break;
       }
     });
-    this.token2 = PubSub.subscribe("action", (msg, { action, params }) => {
-      if (this[action]) this[action](...params);
+    try {
+      this.didMount = this.didMount.bind(this);
+      this.didMount();
+    } catch (e) {}
+  }
+  componentWillUnmount() {
+    PubSub.unsubscribe(this.token);
+    try {
+      this.willUnmount = this.willUnmount.bind(this);
+      this.willUnmount();
+    } catch (e) {}
+  }
+  set(state) {
+    this.setState(state, () => {
+      PubSub.publish("state", { cmd: "stateToSlaves", value: this.state });
     });
-    const id = makeid();
-    this._received_messages.push(id);
-    PubSub.publish("state", { cmd: "get", id, value: this.state });
+  }
+}
+
+export class Slave extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+    this.set = this.set.bind(this);
+  }
+  componentDidMount() {
+    this.token = PubSub.subscribe("state", (msg, { cmd, value }) => {
+      switch (cmd) {
+        case "stateToSlaves":
+          this.setState(value);
+          break;
+      }
+    });
+    PubSub.publish("state", { cmd: "get" });
     try {
       this.didMount = this.didMount.bind(this);
       this.didMount();
@@ -54,29 +74,6 @@ export default class Sync extends React.Component {
     } catch (e) {}
   }
   set(state) {
-    const id = makeid();
-    this._received_messages.push(id);
-    this.setState(state, () => {
-      PubSub.publish("state", { cmd: "state", id, value: state });
-    });
+    PubSub.publish("state", { cmd: "stateToMaster", value: state });
   }
-  action(action, ...params) {
-    PubSub.publish("action", {
-      action,
-      params
-    });
-  }
-  /* STATE SYNC */
-  /* ---------- */
-}
-
-function makeid() {
-  var text = "";
-  var possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 15; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
 }
