@@ -4,7 +4,9 @@ Synchronize state between react components using pubsub.
 
 ## Instructions
 
-If you extends from `Sync`:
+Extends your main class (the typical App) from Master, the rest from Slave, the source of trust will be the Master
+
+If you extends from `Master or Slave`:
 
 instead of using `setState`, use `set`,
 
@@ -17,9 +19,9 @@ That's all!
 ## Usage
 
 ```jsx
-import Sync from "react-syncing";
+import {Master} from "react-syncing";
 
-export class App extends Sync {
+export class App extends Master {
   render() {
     return (
       <div>
@@ -34,9 +36,9 @@ export class App extends Sync {
 From another component
 
 ```jsx
-import Sync from "react-syncing";
+import {Slave} from "react-syncing";
 
-export class NameInput extends Sync {
+export class NameInput extends Slave {
   didMount() {
     // Default name
     this.set({ name: "Name" });
