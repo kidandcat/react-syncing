@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Slave = exports.Master = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -25,7 +24,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Master = exports.Master = function (_React$Component) {
+exports.default = {
+  Master: Master,
+  Slave: Slave
+};
+
+var Master = function (_React$Component) {
   _inherits(Master, _React$Component);
 
   function Master() {
@@ -33,6 +37,7 @@ var Master = exports.Master = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Master.__proto__ || Object.getPrototypeOf(Master)).call(this));
 
+    _this._syncKind = "Master";
     _this.state = {};
     _this.set = _this.set.bind(_this);
     return _this;
@@ -107,6 +112,7 @@ var Slave = function (_React$Component2) {
 
     var _this4 = _possibleConstructorReturn(this, (Slave.__proto__ || Object.getPrototypeOf(Slave)).call(this));
 
+    _this4._syncKind = "Slave";
     _this4.state = {};
     _this4.set = _this4.set.bind(_this4);
     _this4.action = _this4.action.bind(_this4);
@@ -162,5 +168,3 @@ var Slave = function (_React$Component2) {
 
   return Slave;
 }(_react2.default.Component);
-
-exports.Slave = Slave;

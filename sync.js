@@ -1,9 +1,14 @@
 import React from "react";
 import PubSub from "pubsub-js";
 
-export class Master extends React.Component {
+export default {
+  Master,
+  Slave
+};
+class Master extends React.Component {
   constructor() {
     super();
+    this._syncKind = "Master";
     this.state = {};
     this.set = this.set.bind(this);
   }
@@ -49,9 +54,10 @@ export class Master extends React.Component {
   }
 }
 
-export class Slave extends React.Component {
+class Slave extends React.Component {
   constructor() {
     super();
+    this._syncKind = "Slave";
     this.state = {};
     this.set = this.set.bind(this);
     this.action = this.action.bind(this);
