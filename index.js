@@ -109,6 +109,7 @@ var Slave = function (_React$Component2) {
 
     _this4.state = {};
     _this4.set = _this4.set.bind(_this4);
+    _this4.action = _this4.action.bind(_this4);
     return _this4;
   }
 
