@@ -66,6 +66,7 @@ var Sync = function (_React$Component) {
             if (_this2._received_messages.indexOf(id) === -1) {
               _this2._received_messages.push(id);
               id = makeid();
+              _this2._received_messages.push(id);
               _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: _this2.state });
             }
             break;

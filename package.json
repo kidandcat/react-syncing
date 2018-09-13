@@ -1,6 +1,6 @@
 {
   "name": "react-syncing",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Sync state in React",
   "main": "index.js",
   "author": "kidandcat",

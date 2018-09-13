@@ -28,6 +28,7 @@ export default class Sync extends React.Component {
           if (this._received_messages.indexOf(id) === -1) {
             this._received_messages.push(id);
             id = makeid();
+            this._received_messages.push(id);
             PubSub.publish("state", { cmd: "state", id, value: this.state });
           }
           break;
