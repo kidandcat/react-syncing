@@ -40,6 +40,7 @@ var Sync = function (_React$Component) {
     _this._received_messages = [];
     _this.set = _this.set.bind(_this);
     _this.action = _this.action.bind(_this);
+    _this.initialized = false;
     return _this;
   }
 
@@ -57,9 +58,7 @@ var Sync = function (_React$Component) {
           case "state":
             if (_this2._received_messages.indexOf(id) === -1) {
               _this2._received_messages.push(id);
-              if (_this2.state != value) {
-                _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: value });
-              }
+              _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: value });
               _this2.setState(value);
             }
             break;
@@ -79,7 +78,7 @@ var Sync = function (_React$Component) {
       });
       var id = makeid();
       this._received_messages.push(id);
-      _pubsubJs2.default.publish("state", { cmd: "get", id: id, value: this });
+      _pubsubJs2.default.publish("state", { cmd: "get", id: id, value: this.state });
       try {
         this.didMount = this.didMount.bind(this);
         this.didMount();
@@ -98,12 +97,10 @@ var Sync = function (_React$Component) {
   }, {
     key: "set",
     value: function set(state) {
-      var _this3 = this;
-
       var id = makeid();
       this._received_messages.push(id);
       this.setState(state, function () {
-        _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: _this3.state });
+        _pubsubJs2.default.publish("state", { cmd: "state", id: id, value: state });
       });
     }
   }, {

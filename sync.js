@@ -12,6 +12,7 @@ export default class Sync extends React.Component {
     this._received_messages = [];
     this.set = this.set.bind(this);
     this.action = this.action.bind(this);
+    this.initialized = false;
   }
   componentDidMount() {
     this.token = PubSub.subscribe("state", (msg, { cmd, value, id }) => {
@@ -19,9 +20,7 @@ export default class Sync extends React.Component {
         case "state":
           if (this._received_messages.indexOf(id) === -1) {
             this._received_messages.push(id);
-            if (this.state != value) {
-              PubSub.publish("state", { cmd: "state", id, value: value });
-            }
+            PubSub.publish("state", { cmd: "state", id, value: value });
             this.setState(value);
           }
           break;
@@ -38,7 +37,7 @@ export default class Sync extends React.Component {
     });
     const id = makeid();
     this._received_messages.push(id);
-    PubSub.publish("state", { cmd: "get", id, value: this });
+    PubSub.publish("state", { cmd: "get", id, value: this.state });
     try {
       this.didMount = this.didMount.bind(this);
       this.didMount();
@@ -56,7 +55,7 @@ export default class Sync extends React.Component {
     const id = makeid();
     this._received_messages.push(id);
     this.setState(state, () => {
-      PubSub.publish("state", { cmd: "state", id, value: this.state });
+      PubSub.publish("state", { cmd: "state", id, value: state });
     });
   }
   action(action, ...params) {
