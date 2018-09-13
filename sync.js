@@ -26,6 +26,9 @@ export class Master extends React.Component {
           break;
       }
     });
+    this.token2 = PubSub.subscribe("action", (msg, { action, params }) => {
+      if (this[action]) this[action](...params);
+    });
     try {
       this.didMount = this.didMount.bind(this);
       this.didMount();
@@ -33,6 +36,7 @@ export class Master extends React.Component {
   }
   componentWillUnmount() {
     PubSub.unsubscribe(this.token);
+    PubSub.unsubscribe(this.token2);
     try {
       this.willUnmount = this.willUnmount.bind(this);
       this.willUnmount();
@@ -75,5 +79,8 @@ export class Slave extends React.Component {
   }
   set(state) {
     PubSub.publish("state", { cmd: "stateToMaster", value: state });
+  }
+  action(action, ...params) {
+    PubSub.publish("action", { action, params });
   }
 }

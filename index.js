@@ -17,6 +17,8 @@ var _pubsubJs2 = _interopRequireDefault(_pubsubJs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -62,6 +64,12 @@ var Master = exports.Master = function (_React$Component) {
             break;
         }
       });
+      this.token2 = _pubsubJs2.default.subscribe("action", function (msg, _ref2) {
+        var action = _ref2.action,
+            params = _ref2.params;
+
+        if (_this2[action]) _this2[action].apply(_this2, _toConsumableArray(params));
+      });
       try {
         this.didMount = this.didMount.bind(this);
         this.didMount();
@@ -71,6 +79,7 @@ var Master = exports.Master = function (_React$Component) {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _pubsubJs2.default.unsubscribe(this.token);
+      _pubsubJs2.default.unsubscribe(this.token2);
       try {
         this.willUnmount = this.willUnmount.bind(this);
         this.willUnmount();
@@ -90,7 +99,7 @@ var Master = exports.Master = function (_React$Component) {
   return Master;
 }(_react2.default.Component);
 
-var Slave = exports.Slave = function (_React$Component2) {
+var Slave = function (_React$Component2) {
   _inherits(Slave, _React$Component2);
 
   function Slave() {
@@ -108,9 +117,9 @@ var Slave = exports.Slave = function (_React$Component2) {
     value: function componentDidMount() {
       var _this5 = this;
 
-      this.token = _pubsubJs2.default.subscribe("state", function (msg, _ref2) {
-        var cmd = _ref2.cmd,
-            value = _ref2.value;
+      this.token = _pubsubJs2.default.subscribe("state", function (msg, _ref3) {
+        var cmd = _ref3.cmd,
+            value = _ref3.value;
 
         switch (cmd) {
           case "stateToSlaves":
@@ -139,7 +148,18 @@ var Slave = exports.Slave = function (_React$Component2) {
     value: function set(state) {
       _pubsubJs2.default.publish("state", { cmd: "stateToMaster", value: state });
     }
+  }, {
+    key: "action",
+    value: function action(_action) {
+      for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        params[_key - 1] = arguments[_key];
+      }
+
+      _pubsubJs2.default.publish("action", { action: _action, params: params });
+    }
   }]);
 
   return Slave;
 }(_react2.default.Component);
+
+exports.Slave = Slave;
