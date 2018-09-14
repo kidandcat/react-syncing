@@ -56,7 +56,7 @@ export class Slave extends React.Component {
     this._syncKind = "Slave";
     this.state = {};
     this.set = this.set.bind(this);
-    this.action = this.action.bind(this);
+    this.call = this.call.bind(this);
   }
   componentDidMount() {
     this.token = PubSub.subscribe("state", (msg, { cmd, value }) => {
@@ -83,7 +83,7 @@ export class Slave extends React.Component {
   set(state) {
     PubSub.publish("state", { cmd: "stateToMaster", value: state });
   }
-  action(action, ...params) {
+  call(action, params) {
     PubSub.publish("action", { action, params });
   }
 }
