@@ -1,13 +1,14 @@
 {
   "name": "react-syncing",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Sync state in React",
   "main": "index.js",
   "author": "kidandcat",
   "license": "MIT",
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^6.24.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/preset-env": "^7.0.0",
     "pubsub-js": "^1.6.1"
   },
   "scripts": {

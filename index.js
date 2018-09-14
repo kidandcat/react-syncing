@@ -1,6 +1,5 @@
 import React from "react";
 import PubSub from "pubsub-js";
-
 export class Master extends React.Component {
   constructor() {
     super();
@@ -8,8 +7,12 @@ export class Master extends React.Component {
     this.state = {};
     this.set = this.set.bind(this);
   }
+
   componentDidMount() {
-    this.token = PubSub.subscribe("state", (msg, { cmd, value }) => {
+    this.token = PubSub.subscribe("state", (msg, {
+      cmd,
+      value
+    }) => {
       switch (cmd) {
         case "stateToMaster":
           this.setState(value, () => {
@@ -19,6 +22,7 @@ export class Master extends React.Component {
             });
           });
           break;
+
         case "get":
           PubSub.publish("state", {
             cmd: "stateToSlaves",
@@ -27,29 +31,39 @@ export class Master extends React.Component {
           break;
       }
     });
-    this.token2 = PubSub.subscribe("action", (msg, { action, params }) => {
+    this.token2 = PubSub.subscribe("action", (msg, {
+      action,
+      params
+    }) => {
       if (this[action]) this[action](...params);
     });
+
     try {
       this.didMount = this.didMount.bind(this);
       this.didMount();
     } catch (e) {}
   }
+
   componentWillUnmount() {
     PubSub.unsubscribe(this.token);
     PubSub.unsubscribe(this.token2);
+
     try {
       this.willUnmount = this.willUnmount.bind(this);
       this.willUnmount();
     } catch (e) {}
   }
+
   set(state) {
     this.setState(state, () => {
-      PubSub.publish("state", { cmd: "stateToSlaves", value: this.state });
+      PubSub.publish("state", {
+        cmd: "stateToSlaves",
+        value: this.state
+      });
     });
   }
-}
 
+}
 export class Slave extends React.Component {
   constructor() {
     super();
@@ -58,32 +72,50 @@ export class Slave extends React.Component {
     this.set = this.set.bind(this);
     this.call = this.call.bind(this);
   }
+
   componentDidMount() {
-    this.token = PubSub.subscribe("state", (msg, { cmd, value }) => {
+    this.token = PubSub.subscribe("state", (msg, {
+      cmd,
+      value
+    }) => {
       switch (cmd) {
         case "stateToSlaves":
           this.setState(value);
           break;
       }
     });
-    PubSub.publish("state", { cmd: "get" });
+    PubSub.publish("state", {
+      cmd: "get"
+    });
+
     try {
       this.didMount = this.didMount.bind(this);
       this.didMount();
     } catch (e) {}
   }
+
   componentWillUnmount() {
     PubSub.unsubscribe(this.token);
     PubSub.unsubscribe(this.token2);
+
     try {
       this.willUnmount = this.willUnmount.bind(this);
       this.willUnmount();
     } catch (e) {}
   }
+
   set(state) {
-    PubSub.publish("state", { cmd: "stateToMaster", value: state });
+    PubSub.publish("state", {
+      cmd: "stateToMaster",
+      value: state
+    });
   }
+
   call(action, params) {
-    PubSub.publish("action", { action, params });
+    PubSub.publish("action", {
+      action,
+      params
+    });
   }
+
 }
